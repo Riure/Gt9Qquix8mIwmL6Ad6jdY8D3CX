@@ -5,16 +5,30 @@
 
   window.fetch = function(input, init) {
     try {
-      if (typeof input === "string" && input.startsWith("/api/")) {
-        input = API_ORIGIN + input;
+      let url = "";
+      if (typeof input === "string") {
+        url = input;
       } else if (input instanceof Request) {
-        const u = new URL(input.url, location.href);
-        if (u.origin === location.origin && u.pathname.startsWith("/api/")) {
-          input = new Request(API_ORIGIN + u.pathname + u.search, input);
+        url = input.url;
+      }
+
+      if (url.startsWith("/api/") || url.includes("/api/")) {
+        // Se for relativo, adiciona a origem
+        let targetUrl = url.startsWith("/") ? API_ORIGIN + url : url;
+        if (url.includes("/api/") && !url.startsWith("http")) {
+          const pathPart = url.substring(url.indexOf("/api/"));
+          targetUrl = API_ORIGIN + pathPart;
+        }
+
+        if (input instanceof Request) {
+          input = new Request(targetUrl, init || input);
+        } else {
+          init = init || {};
+          input = targetUrl;
         }
       }
     } catch (e) {
-      console.error("[XS API Bridge]", e);
+      console.error("[XS API Bridge Error]", e);
     }
     return nativeFetch(input, init);
   };

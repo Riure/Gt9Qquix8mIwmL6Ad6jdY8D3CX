@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="pt-BR" data-ui-theme="glass" data-preview-mode="auto">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="referrer" content="no-referrer" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data: blob:; media-src 'self' https: blob:; connect-src 'self' https://xs-m7il.onrender.com; object-src 'none'; base-uri 'self'; form-action 'self'" />
+  <title>Xatspace XS</title>
+  <meta name="application-name" content="XS Profile" />
+  <meta name="xs-build" content="v16.2.1-optimized" />
+  <meta name="xs-release" content="16.2.1-github-pages-pattern-backend-fix" />
+  <link rel="stylesheet" href="./assets/xs-ui.8cab063a5981.css" />
+</head>
+<body>
+<div id="app" class="app locked">
+  <div id="wallpaper" class="wallpaper"></div>
+  <video id="bgVideo" class="bg-video" muted loop playsinline></video>
+  <div id="overlay" class="overlay"></div>
+  <div id="ambient" class="ambient" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <div id="cursorGlow" class="cursor-glow" aria-hidden="true"></div>
+
+  <section id="lockScreen" class="screen lock-screen">
+    <div class="lock-shell">
+      <span id="lockKicker" class="lock-kicker">PRIVATE SPACE</span>
+      <h1 id="lockTitle">Conecte seu padrão</h1>
+      <p id="lockSubtitle">Pressione um ponto, arraste pelos demais e solte para entrar.</p>
+      <div id="pattern" class="pattern pattern-engine-v2" aria-label="Padrão de acesso">
+        <svg id="patternCanvas" class="pattern-svg" aria-hidden="true"><polyline class="pattern-polyline"></polyline><line class="pattern-tail"></line></svg>
+        <button type="button" data-dot="0" tabindex="-1"></button><button type="button" data-dot="1" tabindex="-1"></button><button type="button" data-dot="2" tabindex="-1"></button>
+        <button type="button" data-dot="3" tabindex="-1"></button><button type="button" data-dot="4" tabindex="-1"></button><button type="button" data-dot="5" tabindex="-1"></button>
+        <button type="button" data-dot="6" tabindex="-1"></button><button type="button" data-dot="7" tabindex="-1"></button><button type="button" data-dot="8" tabindex="-1"></button>
+      </div>
+      <div id="patternFeedback" class="feedback">Desenhe o padrão</div>
+      <button id="clearPattern" class="pattern-action-btn pattern-clear-btn" type="button" disabled aria-label="Limpar padrão">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h11a5 5 0 0 1 0 10H9"/>
+            <path d="m7 4-3 3 3 3"/>
+          </svg>
+          <span>Limpar padrão</span>
+      </button>
+    </div>
+  </section>
+
+  <section id="profileScreen" class="screen profile-screen">
+    <header class="topbar">
+      <div class="top-actions">
+        <button id="focusBtn" class="round-btn" type="button" title="Modo foco">◌</button>
+        <button id="notificationBtn" class="round-btn notif-btn" type="button" title="Notificações">♢<span id="notificationDot"></span></button>
+      </div>
+      <div id="notifPanel" class="notification-panel glass hidden">
+        <div class="panel-head"><div><span class="eyebrow">AVISOS</span><h3>Notificações</h3></div><button type="button" data-close-panel="notifPanel">×</button></div>
+        <div id="notificationList"></div>
+      </div>
+    </header>
+
+    <aside class="sidebar glass">
+      <div class="identity-chip sidebar-identity">
+        <span id="topAvatar" class="avatar-dot"></span>
+        <div><b id="topRegname">@Vah</b><small id="topUid">UID 195645765</small></div>
+      </div>
+      <nav id="nav"></nav>
+    </aside>
+
+    <main class="workspace">
+      <section id="view-home" class="view active">
+        <div id="hero" class="hero">
+          <div id="homeModules" class="home-modules"></div>
+        </div>
+      </section>
+
+      <section id="view-friends" class="view">
+        <div class="widget glass large">
+          <div class="widget-head"><div><span class="eyebrow">AMIGOS</span><h2>Meu círculo</h2></div><button class="window-close" data-close-view type="button" aria-label="Fechar">×</button></div>
+          <div id="friendsGrid" class="friends-grid"></div>
+        </div>
+      </section>
+
+      <section id="view-gallery" class="view">
+        <div class="widget glass large">
+          <div class="widget-head"><div><span class="eyebrow">GALERIA</span><h2>Momentos</h2></div><button class="window-close" data-close-view type="button" aria-label="Fechar">×</button></div>
+          <div id="albumFilters" class="album-filters"></div>
+          <div id="galleryGrid" class="gallery-grid"></div>
+        </div>
+      </section>
+
+      <section id="view-music" class="view">
+        <div class="widget glass music-widget">
+          <div class="widget-head"><div><span class="eyebrow">MÚSICA</span><h2>Player</h2></div><button class="window-close" data-close-view type="button" aria-label="Fechar">×</button></div>
+          <div class="music-hero"><div id="trackCover" class="track-cover">♫</div><div class="track-meta"><b id="trackTitle">Sem música</b><span id="trackArtist"></span></div></div>
+          <canvas id="visualizer" class="visualizer" width="600" height="90"></canvas>
+          <div class="timeline-clean"><div class="timeline-time"><span id="timeNow">0:00</span><span id="timeTotal">0:00</span></div><button id="progressTrack" class="progress-track" type="button" aria-label="Posição da música"><span id="progressFill" class="progress-fill"></span><span id="progressGlow" class="progress-glow"></span></button></div>
+          <div class="player-controls"><button id="shuffleBtn" type="button" title="Shuffle">⤨</button><button id="prevBtn" type="button">⏮</button><button id="playBtn" class="play-main" type="button">▶</button><button id="nextBtn" type="button">⏭</button><button id="repeatBtn" type="button" title="Repetição">↻</button></div>
+          <div class="volume-row">🔊 <input id="volume" type="range" min="0" max="1" step="0.01" value="0.7"></div>
+          <div id="trackList" class="track-list"></div>
+          <audio id="audio" preload="metadata" crossorigin="anonymous"></audio>
+        </div>
+      </section>
+
+      <section id="view-links" class="view">
+        <div class="widget glass medium">
+          <div class="widget-head"><div><span class="eyebrow">LINKS</span><h2>Me encontre</h2></div><button class="window-close" data-close-view type="button" aria-label="Fechar">×</button></div>
+          <div id="linksList" class="links-list"></div>
+        </div>
+      </section>
+
+      <section id="view-settings" class="view owner-only-view">
+        <div class="widget glass settings">
+          <div class="settings-topline">
+            <div class="settings-titleblock"><div><span class="eyebrow">XS MANAGER</span><h2>Administração</h2></div></div>
+            <div class="settings-actions">
+              <button id="previewAuto" type="button" class="small-btn">Auto</button>
+              <button id="previewDesktop" type="button" class="small-btn">Desktop</button>
+              <button id="previewMobile" type="button" class="small-btn">Mobile</button>
+              <button id="settingsHome" type="button" class="small-btn">← Início</button>
+              <button id="settingsClose" type="button" class="window-close">×</button>
+            </div>
+          </div>
+          <div id="settingsTabs" class="tabs">
+            <button data-tab="appearance" type="button">Aparência</button>
+            <button data-tab="studio" type="button">Studio</button>
+            <button data-tab="home" type="button">Home</button>
+            <button data-tab="motion" type="button">Movimento</button>
+            <button data-tab="general" type="button">Perfil</button>
+            <button data-tab="gallery" type="button">Fotos</button>
+            <button data-tab="music" type="button">Músicas</button>
+            <button data-tab="friends" type="button">Amigos</button>
+            <button data-tab="links" type="button">Links</button>
+            <button data-tab="quotes" type="button">Frases</button>
+            <button data-tab="notifications" type="button">Avisos</button>
+            <button data-tab="access" type="button">Acesso</button>
+            <button data-tab="profiles" type="button">Perfis</button>
+          </div>
+          <div id="settingsContent" class="settings-content"></div>
+          <div class="settings-footer">
+            <div class="settings-footer-state">
+              <div id="adminSessionPill" class="admin-session-pill compact offline" aria-live="polite">
+                <i></i><span id="adminSessionTime">Sessão bloqueada</span>
+              </div>
+              <span class="footer-separator" aria-hidden="true"></span>
+              <i id="settingsDirtyDot" class="settings-dirty-dot"></i>
+              <span id="settingsHint">Todas as alterações estão salvas</span>
+            </div>
+            <div class="settings-footer-actions">
+              <button id="resetDraft" class="manager-action secondary" type="button" disabled><span class="manager-action-icon">↶</span><span>Desfazer</span></button>
+              <button id="saveSettings" class="manager-action primary" type="button" disabled><span class="manager-action-icon">✓</span><span>Salvar alterações</span></button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <button id="nowPlaying" class="now-playing hidden" type="button">♫ <span id="nowPlayingText">Tocando</span></button>
+  </section>
+
+  <div id="ownerGate" class="owner-gate hidden" aria-hidden="true">
+    <div class="owner-card glass owner-card-final" role="dialog" aria-modal="true" aria-labelledby="ownerGateTitle">
+      <button id="ownerGateClose" class="window-close owner-close" type="button" aria-label="Fechar">×</button>
+      <div class="owner-brand">
+        <span class="eyebrow">XS MANAGER</span>
+        <h2 id="ownerGateTitle">Área administrativa</h2>
+        <p id="ownerStageHint">Digite sua chave de acesso para continuar.</p>
+      </div>
+
+      <section id="ownerKeyPane" class="owner-auth-pane active owner-key-stage" aria-label="Chave administrativa">
+        <label class="admin-key-field" for="adminAccessKey">
+          <span>Chave de acesso</span>
+          <div class="admin-key-input-wrap">
+            <input id="adminAccessKey" type="password" autocomplete="current-password" spellcheck="false" placeholder="Digite sua chave" maxlength="128" />
+            <button id="toggleAdminKey" type="button" class="key-visibility-btn" aria-label="Mostrar ou ocultar chave">◉</button>
+          </div>
+        </label>
+        <button id="adminKeyContinue" class="accent-btn owner-auth-main" type="button">Continuar</button>
+        <small id="adminKeyStatus" class="owner-inline-status" aria-live="polite"></small>
+      </section>
+
+      <section id="ownerOtpPane" class="owner-auth-pane owner-code-stage" aria-label="Código de autenticação">
+        <div class="owner-code-copy">
+          <b>Código de autenticação</b>
+          <p>Digite o código de 6 dígitos enviado ao seu canal privado. A validação é automática.</p>
+        </div>
+        <div id="otpEntry" class="otp-entry">
+          <label class="otp-field" for="otpInput">
+            <span>Código recebido</span>
+            <input id="otpInput" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="000000" aria-describedby="otpStatus" />
+          </label>
+          <div class="otp-meta"><span id="otpTimer">00:30</span><span id="otpAttemptsHint">2 tentativas</span></div>
+        </div>
+        <small id="otpStatus" class="owner-inline-status" aria-live="polite">Aguardando o código…</small>
+        <button id="backToAdminKey" class="owner-back-btn" type="button">← Voltar</button>
+      </section>
+
+      <small id="authHealth" class="auth-health" aria-live="polite"></small>
+      <div id="ownerSecurityStatus" class="owner-security-status"></div>
+    </div>
+  </div>
+
+  <div id="lightbox" class="lightbox hidden">
+    <button id="lightboxClose" class="lightbox-btn close" type="button">×</button>
+    <button id="lightboxPrev" class="lightbox-btn prev" type="button">‹</button>
+    <figure>
+      <img id="lightboxImg" alt="Foto ampliada">
+      <figcaption><b id="lightboxTitle"></b><span id="lightboxCaption"></span><em id="lightboxCounter"></em></figcaption>
+    </figure>
+    <button id="lightboxNext" class="lightbox-btn next" type="button">›</button>
+    <div class="zoom-controls">
+      <button id="zoomOut" type="button">−</button>
+      <span id="zoomLabel">100%</span>
+      <button id="zoomIn" type="button">+</button>
+    </div>
+  </div>
+
+  <dialog id="adminModal" class="admin-modal">
+    <form method="dialog" class="admin-modal-card glass" id="adminModalForm">
+      <div class="admin-modal-head">
+        <div><span id="adminModalEyebrow" class="eyebrow">XS MANAGER</span><h3 id="adminModalTitle">Confirmar ação</h3></div>
+        <button id="adminModalX" class="window-close" value="cancel" aria-label="Fechar">×</button>
+      </div>
+      <p id="adminModalText" class="admin-modal-text"></p>
+      <div id="adminModalFields" class="admin-modal-fields"></div>
+      <div class="admin-modal-actions">
+        <button id="adminModalCancel" class="small-btn" value="cancel">Cancelar</button>
+        <button id="adminModalConfirm" class="accent-btn" value="confirm">Confirmar</button>
+      </div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast hidden"></div>
+</div>
+<script src="./assets/xs-api-bridge.js"></script>
+<script src="./assets/xs-runtime.a9c6d8a787f5.js"></script>
+<script src="./assets/xs-app.dd581db94ce1.js"></script>
+</body>
+</html>
